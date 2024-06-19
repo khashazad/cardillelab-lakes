@@ -11,8 +11,8 @@ services:
       lakes:
         ipv4_address: 10.5.0.2
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=lakesadmin
-      - MONGO_INITDB_ROOT_PASSWORD=lakeharvest2021
+      MONGO_INITDB_ROOT_USERNAME: "lakesadmin"
+      MONGO_INITDB_ROOT_PASSWORD: "lakeharvest2021"
   server:
     build: ./server
     ports:
@@ -24,9 +24,10 @@ services:
       - redis
       - database
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - MONGO_URI=mongodb://lakesadmin:lakeharvest2021@10.5.0.2:27017
+      REDIS_HOST: "10.5.0.4"
+      REDIS_PORT: "6379"
+      MONGO_URI: "mongodb://lakesadmin:lakeharvest2021@10.5.0.2:27017"
+
     volumes:
       - interface-exports:/tmp
   redis:
@@ -46,6 +47,9 @@ services:
     depends_on:
       - database
       - server
+    environment:
+      MONGODB_URI: "mongodb://lakesadmin:lakeharvest2021@10.5.0.2:27017"
+      API_URI: "http://10.5.0.3:4000"
 
 networks:
   lakes:
@@ -60,13 +64,13 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: /Volumes/Files/database-data
+      device: /Volumes/lakes/database-data
   lakes-log:
     driver: local
     driver_opts:
       o: bind
       type: none
-      device: /Volumes/Files/database-logs
+      device: /Volumes/lakes/database-logs
   interface-exports:
     driver: local
     driver_opts:
